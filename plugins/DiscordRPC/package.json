@@ -1,0 +1,14 @@
+{
+	"name": "@WillFatty/discord-rpc",
+	"description": "Shows your currently playing Tidal track as Discord Rich Presence",
+	"author": {
+		"name": "WillFatty",
+		"url": "https://github.com/WillFatty",
+		"avatarUrl": ""
+	},
+	"main": "./src/index.ts",
+	"type": "module",
+	"dependencies": {
+		"@xhayper/discord-rpc": "^1.3.4"
+	}
+}
