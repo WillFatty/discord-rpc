@@ -39,8 +39,8 @@ async function updatePresence(mediaItem?: MediaItem) {
 
   if (!track) return clearPresence();
 
-  const now = Date.now();
   const posMs = (PlayState.playTime ?? 0) * 1000;
+  const now = PlayState.playbackControls?.latestCurrentTimeSyncTimestamp ?? Date.now();
   const durMs = (track.duration ?? 0) * 1000;
   const title = track.title;
   const artistNames = track.artists?.map(a => a.name).filter(Boolean).join(", ") || "?";
