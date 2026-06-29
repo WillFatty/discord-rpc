@@ -65,8 +65,8 @@ async function updatePresence(mediaItem?: MediaItem) {
     smallImageUrl: "https://tidal.com/",
     startTimestamp: Math.floor((now - posMs) / 1000),
     endTimestamp: Math.floor((now + (durMs - posMs)) / 1000),
-    instance: false,
-    buttons: [{ label: "Play on Tidal", url: webUrl }],
+    instance: true,
+    buttons: [{ label: "Play on Tidal", url: `https://tidal.com/browse/track/${trackId}` }],
   };
 
   log("built activity:", JSON.stringify(activity, null, 2));
