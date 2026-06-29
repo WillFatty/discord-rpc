@@ -108,7 +108,7 @@ log("redux intercept registered for SEEK and SET_PLAYBACK_STATE");
 
 MediaItem.onMediaTransition(unloads, () => {
   log("media transition detected");
-  updatePresence().catch(() => {});
+  updatePresence(undefined, "PLAYING").catch(() => {});
 });
 log("MediaItem.onMediaTransition registered");
 
