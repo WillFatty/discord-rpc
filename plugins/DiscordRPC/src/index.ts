@@ -49,7 +49,6 @@ async function updatePresence(mediaItem?: MediaItem) {
 
   const trackId = track.id;
   const artistId = track.artists?.[0]?.id;
-  const trackAppUrl = `tidal://track/${trackId}`;
   const artistWebUrl = artistId ? `https://tidal.com/artist/${artistId}` : undefined;
   const webUrl = track.url ? track.url.replace("http://", "https://") : "https://tidal.com";
   log("title:", title, "artists:", artistNames, "trackId:", trackId, "artistId:", artistId);
@@ -67,7 +66,7 @@ async function updatePresence(mediaItem?: MediaItem) {
     startTimestamp: Math.floor((now - posMs) / 1000),
     endTimestamp: Math.floor((now + (durMs - posMs)) / 1000),
     instance: false,
-    buttons: [{ label: "Play on Tidal", url: trackAppUrl }],
+    buttons: [{ label: "Play on Tidal", url: webUrl }],
   };
 
   log("built activity:", JSON.stringify(activity, null, 2));
