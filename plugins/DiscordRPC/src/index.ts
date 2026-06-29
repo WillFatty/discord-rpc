@@ -11,8 +11,11 @@ function log(...args: unknown[]) {
   console.log("[DiscordRPC]", ...args);
 }
 
+let updatePresenceSeq = 0;
+
 async function updatePresence(mediaItem?: MediaItem, newPlayState?: string) {
-  log("=== updatePresence called ===");
+  const seq = ++updatePresenceSeq;
+  log("=== updatePresence called (seq:", seq + ") ===");
   const { enabled } = getSettings();
 
   if (!enabled) return clearPresence();
@@ -33,11 +36,13 @@ async function updatePresence(mediaItem?: MediaItem, newPlayState?: string) {
     if (!track) {
       log("fast path miss, loading MediaItem...");
       mediaItem = await MediaItem.fromPlaybackContext();
+      if (seq !== updatePresenceSeq) { log("stale, discarding (seq:", seq, "latest:", updatePresenceSeq + ")"); return; }
       if (!mediaItem) return clearPresence();
       track = mediaItem.tidalItem;
     }
   }
 
+  if (seq !== updatePresenceSeq) { log("stale, discarding (seq:", seq, "latest:", updatePresenceSeq + ")"); return; }
   if (!track) return clearPresence();
 
   const posMs = (PlayState.playTime ?? 0) * 1000;
@@ -72,7 +77,7 @@ async function updatePresence(mediaItem?: MediaItem, newPlayState?: string) {
 
   log("built activity:", JSON.stringify(activity, null, 2));
   await setActivity(JSON.parse(JSON.stringify(activity)));
-  log("=== updatePresence done ===");
+  log("=== updatePresence done (seq:", seq + ") ===");
 }
 
 onChange(() => {
