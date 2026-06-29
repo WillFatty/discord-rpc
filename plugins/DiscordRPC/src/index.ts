@@ -11,12 +11,13 @@ function log(...args: unknown[]) {
   console.log("[DiscordRPC]", ...args);
 }
 
-async function updatePresence(mediaItem?: MediaItem) {
+async function updatePresence(mediaItem?: MediaItem, newPlayState?: string) {
   log("=== updatePresence called ===");
   const { enabled } = getSettings();
 
   if (!enabled) return clearPresence();
-  if (!PlayState.playing) return clearPresence();
+  const isPlaying = newPlayState !== undefined ? newPlayState === "PLAYING" : PlayState.playing;
+  if (!isPlaying) return clearPresence();
 
   let track: redux.Track | undefined;
 
@@ -91,9 +92,10 @@ onChange(() => {
   log("=== settings change handled ===");
 });
 
-const updateHandler = () => {
-  log("redux intercept triggered (seek or playback state change)");
-  updatePresence().catch(() => {});
+const updateHandler = (state: unknown, type: string) => {
+  log("redux intercept triggered (seek or playback state change)", { state, type });
+  const newPlayState = type === "playbackControls/SET_PLAYBACK_STATE" ? (state as string) : undefined;
+  updatePresence(undefined, newPlayState).catch(() => {});
 };
 
 redux.intercept(["playbackControls/SEEK", "playbackControls/SET_PLAYBACK_STATE"], unloads, updateHandler);
